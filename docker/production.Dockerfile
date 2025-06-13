@@ -12,4 +12,4 @@ COPY html/run.js /run.js
 EXPOSE 3000
 
 # Use run.js to replace placeholders at runtime and serve the app
-CMD ["node", "run.js"]
+CMD ["node", "/run.js"]
