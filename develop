@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+COMPOSE="docker compose -f docker-compose.yml"
+
+if [ $# -gt 0 ];then
+    # install development env
+    if [ "$1" == "install" ]; then
+        shift 1
+        ./develop npm install
+    elif [ "$1" == "install-prod" ]; then
+        shift 1
+        ./develop npm install --only=prod
+
+    # If "npm" is used, run npm
+    # from our node container
+    elif [ "$1" == "npm" ]; then
+        shift 1
+        $COMPOSE run --rm \
+            -w /app \
+            node \
+            npm "$@"
+
+    elif [ "$1" == "npx" ]; then
+      shift 1
+      $COMPOSE run --rm \
+            -w /app \
+            node \
+            npx "$@"
+
+    else
+        $COMPOSE "$@"
+    fi
+else
+    $COMPOSE ps
+fi

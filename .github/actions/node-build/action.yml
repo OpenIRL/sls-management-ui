@@ -1,0 +1,33 @@
+name: 'Node build'
+description: 'Build and Push the image'
+inputs:
+  node-version:
+    required: true
+    description: 'Version Spec of the version to use. Examples: 12.x, 10.15.1, >=10.15.0.'
+  working-directory:
+    default: 'html/'
+    description: 'Working directory'
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: 'npm'
+        cache-dependency-path: html/package-lock.json
+
+    - name: Update Browserlist
+      shell: sh
+      working-directory: ${{ inputs.working-directory }}
+      run: npx browserslist@latest --update-db
+
+    - name: Install Dependencies
+      shell: sh
+      working-directory: ${{ inputs.working-directory }}
+      run: npm install
+
+    - name: Build App
+      shell: sh
+      working-directory: ${{ inputs.working-directory }}
+      run: npm run build
