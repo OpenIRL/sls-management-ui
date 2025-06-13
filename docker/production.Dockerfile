@@ -6,7 +6,7 @@ WORKDIR /app
 RUN npm install -g http-server
 
 # Copy built app and run.js
-COPY html/dist/ /app
+COPY html/build/ /app
 COPY html/run.js /run.js
 
 EXPOSE 3000
