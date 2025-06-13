@@ -4,7 +4,7 @@ const path = require('path');
 const { execSync } = require('child_process');
 
 // For Create React App, the build output is in the build/ directory
-const buildDir = path.join(__dirname, 'build');
+const buildDir = '/app';
 
 // Check if build directory exists
 if (!fs.existsSync(buildDir)) {
@@ -35,12 +35,12 @@ const files = findFiles(buildDir, /\.(html|js)$/);
 
 console.log('SRT Live Server Management UI - Runtime Configuration\n');
 console.log('Configuration:');
-console.log(`  APP_BASE_URL: ${process.env.APP_BASE_URL || 'http://localhost:8080'}`);
-console.log(`  SRT_PLAYER_PORT: ${process.env.SRT_PLAYER_PORT || '4000'}`);
-console.log(`  SRT_SENDER_PORT: ${process.env.SRT_SENDER_PORT || '4001'}`);
-console.log(`  SLS_STATS_PORT: ${process.env.SLS_STATS_PORT || '8080'}`);
-if (process.env.SRTLA_PORT) {
-    console.log(`  SRTLA_PORT: ${process.env.SRTLA_PORT}`);
+console.log(`  APP_BASE_URL: ${process.env.REACT_APP_BASE_URL || 'http://localhost:8080'}`);
+console.log(`  SRT_PLAYER_PORT: ${process.env.REACT_SRT_PLAYER_PORT || '4000'}`);
+console.log(`  SRT_SENDER_PORT: ${process.env.REACT_SRT_SENDER_PORT || '4001'}`);
+console.log(`  SLS_STATS_PORT: ${process.env.REACT_SLS_STATS_PORT || '8080'}`);
+if (process.env.REACT_SRTLA_PORT) {
+    console.log(`  SRTLA_PORT: ${process.env.REACT_SRTLA_PORT}`);
 } else {
     console.log(`  SRTLA_PORT: (not configured)`);
 }
@@ -56,13 +56,13 @@ files.forEach(filepath => {
     
     // Replace new port placeholders
     newContent = newContent.replace(/\{\{SRT_PLAYER_PORT\}\}/g, 
-        process.env.SRT_PLAYER_PORT || '4000');
+        process.env.REACT_SRT_PLAYER_PORT || '4000');
     newContent = newContent.replace(/\{\{SRT_SENDER_PORT\}\}/g, 
-        process.env.SRT_SENDER_PORT || '4001');
+        process.env.REACT_SRT_SENDER_PORT || '4001');
     newContent = newContent.replace(/\{\{SLS_STATS_PORT\}\}/g, 
-        process.env.SLS_STATS_PORT || '8080');
+        process.env.REACT_SLS_STATS_PORT || '8080');
     newContent = newContent.replace(/\{\{SRTLA_PORT\}\}/g, 
-        process.env.SRTLA_PORT || '');  // Empty string if not configured
+        process.env.REACT_SRTLA_PORT || '');  // Empty string if not configured
 
     if (content !== newContent) {
         fs.writeFileSync(filepath, newContent);
@@ -71,4 +71,4 @@ files.forEach(filepath => {
 });
 
 console.log('\nStarting HTTP server on port 3000...');
-execSync(`http-server ${buildDir} --cors -p 3000`, { stdio: 'inherit' }); 
+execSync(`http-server /app --cors -p 3000`, { stdio: 'inherit' });
