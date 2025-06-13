@@ -62,7 +62,7 @@ runs:
       with:
         context: .
         platforms: linux/amd64,linux/arm64
-        file: Dockerfile
+        file: docker/production.Dockerfile
         tags: |
           ${{ inputs.repository }}/${{ inputs.image-name }}:${{ inputs.image-version }}
           ${{ inputs.repository }}/${{ inputs.image-name }}:${{ steps.set-tag.outputs.TAG }}
