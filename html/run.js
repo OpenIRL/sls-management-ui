@@ -44,30 +44,22 @@ if (process.env.REACT_SRTLA_PORT) {
 } else {
     console.log(`  SRTLA_PORT: (not configured)`);
 }
-console.log('');
 
 // Replace placeholders in all files
 files.forEach(filepath => {
     console.log(`Processing ${filepath}...`);
     const content = fs.readFileSync(filepath, 'utf8');
 
-    let newContent = content.replace(/\{\{APP_BASE_URL\}\}/g, 
-        process.env.APP_BASE_URL || 'http://localhost:8080');
-    
-    // Replace new port placeholders
-    newContent = newContent.replace(/\{\{SRT_PLAYER_PORT\}\}/g, 
-        process.env.REACT_SRT_PLAYER_PORT || '4000');
-    newContent = newContent.replace(/\{\{SRT_SENDER_PORT\}\}/g, 
-        process.env.REACT_SRT_SENDER_PORT || '4001');
-    newContent = newContent.replace(/\{\{SLS_STATS_PORT\}\}/g, 
-        process.env.REACT_SLS_STATS_PORT || '8080');
-    newContent = newContent.replace(/\{\{SRTLA_PORT\}\}/g, 
-        process.env.REACT_SRTLA_PORT || '');  // Empty string if not configured
+    let newContent = content
+        .toString()
+        .replaceAll('{{APP_BASE_URL}}', process.env.REACT_APP_BASE_URL)
+        // Replace new port placeholders
+        .replaceAll('{{SRT_PLAYER_PORT}}', process.env.REACT_SRT_PLAYER_PORT)
+        .replaceAll('{{SRT_SENDER_PORT}}', process.env.REACT_SRT_SENDER_PORT)
+        .replaceAll('{{SLS_STATS_PORT}}', process.env.REACT_SLS_STATS_PORT)
+        .replaceAll('{{SRTLA_PORT}}', process.env.REACT_SRTLA_PORT);
 
-    if (content !== newContent) {
-        fs.writeFileSync(filepath, newContent);
-        console.log(`  → Replaced placeholders in ${path.basename(filepath)}`);
-    }
+    fs.writeFileSync(filepath, newContent);
 });
 
 console.log('\nStarting HTTP server on port 3000...');
