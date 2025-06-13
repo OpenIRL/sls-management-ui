@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Container, Navbar, Nav, Button, Alert, Spinner, Card } from 'react-bootstrap';
 import { useAuth } from '../contexts/AuthContext';
 import { apiService } from '../services/api.service';
@@ -30,7 +30,7 @@ export const PublishersPage: React.FC = () => {
   }, [streamIds]);
 
   // Fetch stream IDs from API
-  const fetchStreamIds = async () => {
+  const fetchStreamIds = useCallback(async () => {
     if (!isAuthenticated) {
       setLoading(false);
       return;
@@ -50,12 +50,12 @@ export const PublishersPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [isAuthenticated]);
 
   // Fetch data on mount and when authentication changes
   useEffect(() => {
     fetchStreamIds();
-  }, [isAuthenticated]);
+  }, [isAuthenticated, fetchStreamIds]);
 
   // Handle stream added
   const handleStreamAdded = (newStreamId: StreamId) => {

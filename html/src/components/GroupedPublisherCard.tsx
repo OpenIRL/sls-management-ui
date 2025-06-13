@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Card, Collapse, Badge, Button, ProgressBar } from 'react-bootstrap';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Card, Collapse, Button, ProgressBar } from 'react-bootstrap';
 import { StreamId, PublisherStats } from '../types/api.types';
 import { apiService } from '../services/api.service';
 import { StreamUrlsDialog } from './StreamUrlsDialog';
@@ -38,7 +38,7 @@ export const GroupedPublisherCard: React.FC<GroupedPublisherCardProps> = ({
   const currentRefreshInterval = isOnline ? ACTIVE_REFRESH_INTERVAL : INACTIVE_REFRESH_INTERVAL;
 
   // Fetch publisher statistics using any of the player IDs
-  const fetchStats = async () => {
+  const fetchStats = useCallback(async () => {
     if (streamIds.length === 0) {
       setStats(null);
       setIsOnline(false);
@@ -59,7 +59,7 @@ export const GroupedPublisherCard: React.FC<GroupedPublisherCardProps> = ({
       setIsOnline(false);
       setLoading(false);
     }
-  };
+  }, [streamIds]);
 
   // Dynamic interval based on online status
   useEffect(() => {
@@ -73,7 +73,7 @@ export const GroupedPublisherCard: React.FC<GroupedPublisherCardProps> = ({
 
     // Clean up interval on unmount or when dependencies change
     return () => clearInterval(intervalId);
-  }, [streamIds, isOnline]); // Re-create interval when online status changes
+  }, [streamIds, isOnline, currentRefreshInterval, fetchStats]); // Re-create interval when online status changes
 
   // Countdown timer effect
   useEffect(() => {
