@@ -84,17 +84,13 @@ export const AddStreamDialog: React.FC<AddStreamDialogProps> = ({
     setError(null);
 
     try {
-      await apiService.addStreamId({
-        publisher: publisher.trim(),
-        player: player.trim(),
-        description: description.trim() || undefined,
-      });
-
       const newStreamId: StreamId = {
         publisher: publisher.trim(),
         player: player.trim(),
         description: description.trim() || undefined,
       };
+
+      await apiService.addStreamId(newStreamId);
 
       onStreamAdded(newStreamId);
       onClose();
