@@ -132,7 +132,7 @@ export const AddStreamDialog: React.FC<AddStreamDialogProps> = ({
     <Modal show={open} onHide={onClose} centered>
       <Form onSubmit={handleSubmit}>
         <Modal.Header closeButton>
-          <Modal.Title>
+          <Modal.Title className="add-stream-dialog-title">
             {prefillPublisher ? `Add Player to ${prefillPublisher}` : 'Add New Stream ID'}
           </Modal.Title>
         </Modal.Header>

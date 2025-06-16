@@ -80,12 +80,6 @@ export const PublishersPage: React.FC = () => {
     setAddDialogOpen(true);
   };
 
-  // Handle refresh
-  const handleRefresh = () => {
-    setLoading(true);
-    fetchStreamIds();
-  };
-
   return (
     <>
       <Navbar className="navbar-dark sticky-top" expand="lg">
@@ -94,17 +88,7 @@ export const PublishersPage: React.FC = () => {
             <i className="bi bi-broadcast me-2"></i>
             SRT Live Server Management
           </Navbar.Brand>
-          
           <Nav className="ms-auto">
-            <Button
-              variant="link"
-              className="nav-link"
-              onClick={handleRefresh}
-              title="Refresh"
-            >
-              <i className="bi bi-arrow-clockwise"></i>
-            </Button>
-            
             <Button
               variant="link"
               className="nav-link"
@@ -137,10 +121,10 @@ export const PublishersPage: React.FC = () => {
           </Card>
         ) : (
           <>
-            <div className="d-flex justify-content-between align-items-center mb-4">
-              <div>
+            <div className="d-flex justify-content-between align-items-center mb-4 gap-2">
+              <div className="page-headline">
                 <h2 className="mb-1">Publishers</h2>
-                <p className="text-muted">
+                <p className="text-muted mb-0">
                   Manage your SRT publishers and monitor their status
                 </p>
               </div>
@@ -152,6 +136,7 @@ export const PublishersPage: React.FC = () => {
                   setAddDialogOpen(true);
                 }}
                 disabled={loading}
+                className="text-nowrap"
               >
                 <i className="bi bi-plus-lg me-2"></i>
                 Add Stream

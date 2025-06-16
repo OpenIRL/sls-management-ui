@@ -36,20 +36,16 @@ export const StreamUrlsDialog: React.FC<StreamUrlsDialogProps> = ({
     return (
         <Modal show={open} onHide={onClose} size="lg" centered>
             <Modal.Header closeButton>
-                <Modal.Title>
-                    <i className="bi bi-link-45deg me-2"></i>
-                    Stream URLs
+                <Modal.Title className="d-flex gap-1">
+                    <div className="stream-urls-dialog-headline">
+                        <i className="bi bi-link-45deg me-2"></i>
+                        Stream URLs
+                    </div>
+                    <span className="text-muted">- {streamId.description}</span>
                 </Modal.Title>
             </Modal.Header>
             
             <Modal.Body>
-                {streamId.description && (
-                    <Alert variant="info" className="mb-4">
-                        <i className="bi bi-info-circle me-2"></i>
-                        <span className="mt-1 small">{streamId.description}</span>
-                    </Alert>
-                )}
-
                 {urls.map((urlInfo) => (
                     <Card key={urlInfo.label} className="mb-3">
                         <Card.Body>

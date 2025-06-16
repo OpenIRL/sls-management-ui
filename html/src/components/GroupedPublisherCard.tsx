@@ -123,11 +123,12 @@ export const GroupedPublisherCard: React.FC<GroupedPublisherCardProps> = ({
         )}
         
         <Card.Body>
-          <div className="d-flex justify-content-between align-items-center">
-            <div className="flex-grow-1">
+          <div className="d-flex justify-content-between align-items-center gap-2">
+            <div className="d-flex flex-column" style={{minWidth: 0}}>
               <h5 className="mb-1 d-flex align-items-center">
                 <i className="bi bi-broadcast me-2"></i>
-                Publisher: {publisherName}
+                <span className="d-none d-lg-inline">Publisher:&nbsp;</span>
+                <span className="publisher-card-publisher-name">{publisherName}</span>
               </h5>
               <p className="text-muted mb-0 small">
                 {streamIds.length} Player ID{streamIds.length !== 1 ? 's' : ''} configured
@@ -135,7 +136,15 @@ export const GroupedPublisherCard: React.FC<GroupedPublisherCardProps> = ({
             </div>
             
             <div className="d-flex align-items-center gap-2">
-              <div 
+              <div
+                className="d-flex align-items-center px-2 py-1 rounded"
+                style={{backgroundColor: 'rgba(108, 117, 125, 0.1)', fontSize: '0.75rem'}}
+                title={`Next update in ${secondsUntilUpdate} seconds`}
+              >
+                <i className="bi bi-arrow-clockwise me-1"></i>
+                <span className="text-muted">{secondsUntilUpdate}s</span>
+              </div>
+              <div
                 className={`d-flex align-items-center px-3 py-1 rounded-pill`}
                 style={{ 
                   backgroundColor: isOnline ? 'rgba(25, 135, 84, 0.2)' : 'rgba(108, 117, 125, 0.2)',
@@ -150,28 +159,6 @@ export const GroupedPublisherCard: React.FC<GroupedPublisherCardProps> = ({
                   {isOnline ? 'Online' : 'Offline'}
                 </span>
               </div>
-              <div 
-                className="d-flex align-items-center px-2 py-1 rounded"
-                style={{ 
-                  backgroundColor: 'rgba(108, 117, 125, 0.1)',
-                  fontSize: '0.75rem'
-                }}
-                title={`Next update in ${secondsUntilUpdate} seconds`}
-              >
-                <i className="bi bi-arrow-clockwise me-1"></i>
-                <span className="text-muted">{secondsUntilUpdate}s</span>
-              </div>
-              {onAddPlayer && (
-                <Button
-                  variant="primary"
-                  size="sm"
-                  onClick={() => onAddPlayer(publisherName)}
-                  title="Add Player ID"
-                  className="d-flex align-items-center"
-                >
-                  <i className="bi bi-plus-lg"></i>
-                </Button>
-              )}
               <Button
                 variant="link"
                 size="sm"
@@ -243,17 +230,31 @@ export const GroupedPublisherCard: React.FC<GroupedPublisherCardProps> = ({
 
               {/* Player IDs Section */}
               <div className="player-ids-section">
-                <h6 className="text-muted mb-2 small text-uppercase">Player IDs:</h6>
+                <div className="d-flex justify-content-between align-items-baseline mb-3">
+                  <h6 className="text-muted small text-uppercase">Player IDs:</h6>
+                  {onAddPlayer && (
+                      <Button
+                          variant="primary"
+                          size="sm"
+                          onClick={() => onAddPlayer(publisherName)}
+                          title="Add Player"
+                          className="d-flex align-items-center"
+                      >
+                        <i className="bi bi-plus-lg"></i>
+                        Add Player
+                      </Button>
+                  )}
+                </div>
                 <div className="player-ids-list">
                   {streamIds.map((streamId) => (
                     <div 
                       key={streamId.player}
-                      className="player-id-item d-flex justify-content-between align-items-center p-2 rounded mb-1"
+                      className="player-id-item d-flex justify-content-between align-items-center p-2 rounded mb-1 gap-2"
                     >
-                      <div className="d-flex align-items-center flex-grow-1">
-                        <code className="text-primary me-2">{streamId.player}</code>
+                      <div className="d-flex align-items-center gap-2" style={{minWidth: 0}}>
+                        <code className="text-primary publisher-card-player-name">{streamId.player}</code>
                         {streamId.description && (
-                          <span className="text-muted small">- {streamId.description}</span>
+                          <span className="text-muted small text-nowrap">- {streamId.description}</span>
                         )}
                       </div>
                       <div className="d-flex align-items-center gap-1">

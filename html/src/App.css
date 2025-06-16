@@ -109,7 +109,7 @@ body {
 /* Stats grid */
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 1rem;
 }
 
@@ -260,4 +260,24 @@ body {
   background-color: rgba(0, 0, 0, 0.3);
   border-color: rgba(13, 110, 253, 0.5) !important;
   box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25) !important;
-} 
+}
+
+/* Add Stream Dialog */
+.add-stream-dialog-title {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* Publisher Card */
+.publisher-card-publisher-name {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.publisher-card-player-name {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
