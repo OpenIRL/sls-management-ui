@@ -36,11 +36,11 @@ const files = findFiles(buildDir, /\.(html|js)$/);
 console.log('SRT Live Server Management UI - Runtime Configuration\n');
 console.log('Configuration:');
 console.log(`  APP_BASE_URL: ${process.env.REACT_APP_BASE_URL || 'http://localhost:8080'}`);
-console.log(`  SRT_PLAYER_PORT: ${process.env.REACT_SRT_PLAYER_PORT || '4000'}`);
-console.log(`  SRT_SENDER_PORT: ${process.env.REACT_SRT_SENDER_PORT || '4001'}`);
-console.log(`  SLS_STATS_PORT: ${process.env.REACT_SLS_STATS_PORT || '8080'}`);
-if (process.env.REACT_SRTLA_PORT) {
-    console.log(`  SRTLA_PORT: ${process.env.REACT_SRTLA_PORT}`);
+console.log(`  SRT_PLAYER_PORT: ${process.env.REACT_APP_SRT_PLAYER_PORT || '4000'}`);
+console.log(`  SRT_SENDER_PORT: ${process.env.REACT_APP_SRT_SENDER_PORT || '4001'}`);
+console.log(`  SLS_STATS_PORT: ${process.env.REACT_APP_SLS_STATS_PORT || '8080'}`);
+if (process.env.REACT_APP_SRTLA_PORT) {
+    console.log(`  SRTLA_PORT: ${process.env.REACT_APP_SRTLA_PORT}`);
 } else {
     console.log(`  SRTLA_PORT: (not configured)`);
 }
@@ -52,12 +52,12 @@ files.forEach(filepath => {
 
     let newContent = content
         .toString()
-        .replaceAll('{{APP_BASE_URL}}', process.env.REACT_APP_BASE_URL)
+        .replaceAll('{{BASE_URL}}', process.env.REACT_APP_BASE_URL)
         // Replace new port placeholders
-        .replaceAll('{{SRT_PLAYER_PORT}}', process.env.REACT_SRT_PLAYER_PORT)
-        .replaceAll('{{SRT_SENDER_PORT}}', process.env.REACT_SRT_SENDER_PORT)
-        .replaceAll('{{SLS_STATS_PORT}}', process.env.REACT_SLS_STATS_PORT)
-        .replaceAll('{{SRTLA_PORT}}', process.env.REACT_SRTLA_PORT);
+        .replaceAll('{{SRT_PLAYER_PORT}}', process.env.REACT_APP_SRT_PLAYER_PORT)
+        .replaceAll('{{SRT_SENDER_PORT}}', process.env.REACT_APP_SRT_SENDER_PORT)
+        .replaceAll('{{SLS_STATS_PORT}}', process.env.REACT_APP_SLS_STATS_PORT)
+        .replaceAll('{{SRTLA_PORT}}', process.env.REACT_APP_SRTLA_PORT);
 
     fs.writeFileSync(filepath, newContent);
 });
