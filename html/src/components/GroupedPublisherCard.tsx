@@ -64,11 +64,11 @@ export const GroupedPublisherCard: React.FC<GroupedPublisherCardProps> = ({
   // Dynamic interval based on online status
   useEffect(() => {
     // Initial fetch
-    fetchStats();
+    fetchStats().then();
 
     // Set up interval with dynamic refresh rate
-    const intervalId = setInterval(() => {
-      fetchStats();
+    const intervalId = setInterval(async () => {
+      await fetchStats();
     }, currentRefreshInterval);
 
     // Clean up interval on unmount or when dependencies change
