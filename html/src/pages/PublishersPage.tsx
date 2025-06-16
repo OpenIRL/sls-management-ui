@@ -3,9 +3,8 @@ import { Container, Navbar, Nav, Button, Alert, Spinner, Card } from 'react-boot
 import { useAuth } from '../contexts/AuthContext';
 import { apiService } from '../services/api.service';
 import { StreamId } from '../types/api.types';
-import { GroupedPublisherCard } from '../components/GroupedPublisherCard';
-import { AddStreamDialog } from '../components/AddStreamDialog';
-import { SettingsDialog } from '../components/SettingsDialog';
+import { PublisherCard } from '../components/publisher';
+import { AddStreamDialog, SettingsDialog } from '../components/dialogs';
 
 // Main publishers page component
 export const PublishersPage: React.FC = () => {
@@ -182,7 +181,7 @@ export const PublishersPage: React.FC = () => {
             ) : (
               <div>
                 {Object.entries(groupedStreamIds).map(([publisher, publisherStreamIds]) => (
-                  <GroupedPublisherCard
+                  <PublisherCard
                     key={publisher}
                     publisherName={publisher}
                     streamIds={publisherStreamIds}

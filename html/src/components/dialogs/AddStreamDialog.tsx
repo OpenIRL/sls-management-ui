@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Modal, Form, Button, Alert } from 'react-bootstrap';
-import { apiService } from '../services/api.service';
-import { useSettings } from '../contexts/SettingsContext';
-import { StreamId } from '../types/api.types';
+import { apiService } from '../../services/api.service';
+import { useSettings } from '../../contexts/SettingsContext';
+import { StreamId } from '../../types/api.types';
+import { IdGeneratorField, TextareaField } from '../form';
+import { generateUUID, generateDefaultStreamIds } from '../../utils/uuid';
 
 // Props for AddStreamDialog component
 interface AddStreamDialogProps {
@@ -11,15 +13,6 @@ interface AddStreamDialogProps {
   onStreamAdded: (streamId: StreamId) => void;
   prefillPublisher?: string;
 }
-
-// Generate UUID v4
-const generateUUID = (): string => {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-    const r = Math.random() * 16 | 0;
-    const v = c === 'x' ? r : ((r & 0x3) | 0x8);
-    return v.toString(16);
-  });
-};
 
 // Dialog component for adding new stream IDs
 export const AddStreamDialog: React.FC<AddStreamDialogProps> = ({
@@ -35,16 +28,6 @@ export const AddStreamDialog: React.FC<AddStreamDialogProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // Generate default IDs
-  const generateDefaultIds = () => {
-    const publisherUuid = generateUUID().replace(/-/g, '');
-    const playerUuid = generateUUID().replace(/-/g, '');
-    return {
-      publisherId: `live_${publisherUuid}`,
-      playerId: `play_${playerUuid}`
-    };
-  };
-
   // Reset form when dialog opens/closes
   React.useEffect(() => {
     if (!open) {
@@ -59,7 +42,7 @@ export const AddStreamDialog: React.FC<AddStreamDialogProps> = ({
       setPlayer(`play_${uuid}`);
     } else {
       // Generate both IDs for new stream
-      const { publisherId, playerId } = generateDefaultIds();
+      const { publisherId, playerId } = generateDefaultStreamIds();
       setPublisher(publisherId);
       setPlayer(playerId);
     }
@@ -154,92 +137,50 @@ export const AddStreamDialog: React.FC<AddStreamDialogProps> = ({
             </Alert>
           )}
           
-          <Form.Group className="mb-3">
-            <Form.Label>Publisher ID</Form.Label>
-            <div className="input-group">
-              {(!advancedMode && !prefillPublisher) && (
-                <span className="input-group-text" title="Enable Advanced Mode in settings to edit">
-                  <i className="bi bi-lock-fill text-muted"></i>
-                </span>
-              )}
-              <Form.Control
-                type="text"
-                value={publisher}
-                onChange={(e) => advancedMode && setPublisher(e.target.value)}
-                required
-                autoFocus={!prefillPublisher && advancedMode}
-                readOnly={!!prefillPublisher || !advancedMode}
-                placeholder="e.g., live_abc123"
-              />
-              {!prefillPublisher && (
-                <Button
-                  variant="outline-secondary"
-                  type="button"
-                  onClick={handleRegeneratePublisher}
-                  title="Generate new Publisher ID"
-                >
-                  <i className="bi bi-arrow-clockwise"></i>
-                </Button>
-              )}
-            </div>
-            <Form.Text className="text-muted">
-              {prefillPublisher 
+          <IdGeneratorField
+            label="Publisher ID"
+            value={publisher}
+            onChange={advancedMode ? setPublisher : undefined}
+            onRegenerate={handleRegeneratePublisher}
+            placeholder="e.g., live_abc123"
+            helpText={
+              prefillPublisher 
                 ? 'Adding a new player to this publisher'
                 : advancedMode 
                   ? 'Unique identifier for the publisher (editable in advanced mode)'
                   : 'Unique identifier for the publisher (auto-generated)'
-              }
-            </Form.Text>
-          </Form.Group>
+            }
+            readOnly={!!prefillPublisher || !advancedMode}
+            autoFocus={!prefillPublisher && advancedMode}
+            showRegenerateButton={!prefillPublisher}
+            required
+          />
           
-          <Form.Group className="mb-3">
-            <Form.Label>Player ID</Form.Label>
-            <div className="input-group">
-              {!advancedMode && (
-                <span className="input-group-text" title="Enable Advanced Mode in settings to edit">
-                  <i className="bi bi-lock-fill text-muted"></i>
-                </span>
-              )}
-              <Form.Control
-                type="text"
-                value={player}
-                onChange={(e) => advancedMode && setPlayer(e.target.value)}
-                required
-                autoFocus={!!prefillPublisher && advancedMode}
-                readOnly={!advancedMode}
-                placeholder="e.g., play_abc123"
-              />
-              <Button
-                variant="outline-secondary"
-                type="button"
-                onClick={handleRegeneratePlayer}
-                title="Generate new Player ID"
-              >
-                <i className="bi bi-arrow-clockwise"></i>
-              </Button>
-            </div>
-            <Form.Text className="text-muted">
-              {advancedMode 
+          <IdGeneratorField
+            label="Player ID"
+            value={player}
+            onChange={advancedMode ? setPlayer : undefined}
+            onRegenerate={handleRegeneratePlayer}
+            placeholder="e.g., play_abc123"
+            helpText={
+              advancedMode 
                 ? 'Unique identifier for the player (editable in advanced mode)'
                 : 'Unique identifier for the player (auto-generated)'
-              }
-            </Form.Text>
-          </Form.Group>
+            }
+            readOnly={!advancedMode}
+            autoFocus={!!prefillPublisher && advancedMode}
+            required
+          />
           
-          <Form.Group className="mb-3">
-            <Form.Label>Description (Optional)</Form.Label>
-            <Form.Control
-              as="textarea"
-              rows={2}
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="e.g., Main studio feed"
-              autoFocus={!advancedMode}
-            />
-            <Form.Text className="text-muted">
-              Optional description for this stream
-            </Form.Text>
-          </Form.Group>
+          <TextareaField
+            label="Description (Optional)"
+            value={description}
+            onChange={setDescription}
+            placeholder="e.g., Main studio feed"
+            helpText="Optional description for this stream"
+            rows={2}
+            autoFocus={!advancedMode}
+          />
         </Modal.Body>
         
         <Modal.Footer>
