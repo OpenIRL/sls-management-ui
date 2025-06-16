@@ -10,6 +10,7 @@ export interface CopyFieldWithHideProps extends Omit<CopyFieldProps, 'additional
 // Copy field with hide/show functionality (for sensitive data like API keys)
 export const CopyFieldWithHide: React.FC<CopyFieldWithHideProps> = ({
   showToggleText = false,
+  readOnly = false,
   ...props
 }) => {
   const [showValue, setShowValue] = useState(false);
@@ -17,6 +18,7 @@ export const CopyFieldWithHide: React.FC<CopyFieldWithHideProps> = ({
   return (
     <CopyField
       {...props}
+      readOnly={readOnly}
       type={showValue ? 'text' : 'password'}
       additionalActions={
         <Button

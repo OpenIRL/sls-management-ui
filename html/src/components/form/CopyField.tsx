@@ -16,6 +16,7 @@ export const CopyField: React.FC<CopyFieldProps> = ({
   copyButtonText = 'Copy',
   successDuration = 2000,
   additionalActions,
+  readOnly = true,
   ...baseInputProps
 }) => {
   const [copied, setCopied] = useState(false);
@@ -39,7 +40,7 @@ export const CopyField: React.FC<CopyFieldProps> = ({
   return (
     <BaseInput
       {...baseInputProps}
-      readOnly={true}
+      readOnly={readOnly}
       rightActions={
         <>
           {additionalActions}
