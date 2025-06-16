@@ -200,17 +200,7 @@ export const GroupedPublisherCard: React.FC<GroupedPublisherCardProps> = ({
                       <div className="stat-value">{stats.rtt.toFixed(2)} ms</div>
                     </div>
                   </div>
-                  
-                  <div className="stat-item">
-                    <i className={`bi bi-exclamation-triangle stat-icon ${stats.pktRcvLoss > 0 ? 'text-warning' : ''}`}></i>
-                    <div>
-                      <div className="stat-label">Packet Loss</div>
-                      <div className={`stat-value ${stats.pktRcvLoss > 0 ? 'text-warning' : ''}`}>
-                        {stats.pktRcvLoss}
-                      </div>
-                    </div>
-                  </div>
-                  
+
                   <div className="stat-item">
                     <i className={`bi bi-x-octagon stat-icon ${stats.pktRcvDrop > 0 ? 'text-danger' : ''}`}></i>
                     <div>
