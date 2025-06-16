@@ -8,11 +8,16 @@ export interface StreamId {
 
 export interface PublisherStats {
   bitrate: number;
-  uptime: number;
-  rtt: number;
+  bytesRcvDrop: number;
+  bytesRcvLoss: number;
+  latency: number;
+  mbpsBandwidth: number;
   mbpsRecvRate: number;
-  pktRcvLoss: number;
+  msRcvBuf: number;
   pktRcvDrop: number;
+  pktRcvLoss: number;
+  rtt: number;
+  uptime: number;
 }
 
 export interface ServerConfig {
