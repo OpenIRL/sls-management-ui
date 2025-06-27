@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import { Form, InputGroup } from 'react-bootstrap';
 
 // Props for BaseInput component
@@ -25,7 +25,7 @@ export interface BaseInputProps {
 }
 
 // Base input component with flexible slots for actions
-export const BaseInput: React.FC<BaseInputProps> = ({
+export const BaseInput = forwardRef<HTMLInputElement | HTMLTextAreaElement, BaseInputProps>(({
   label,
   value,
   onChange,
@@ -42,7 +42,7 @@ export const BaseInput: React.FC<BaseInputProps> = ({
   className = '',
   error,
   disabled = false
-}) => {
+}, ref) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (onChange && !readOnly && !disabled) {
       onChange(e.target.value);
@@ -74,6 +74,7 @@ export const BaseInput: React.FC<BaseInputProps> = ({
           <Form.Control
             {...inputProps}
             {...textareaProps}
+            ref={ref as any}
           />
           {rightActions}
         </InputGroup>
@@ -81,6 +82,7 @@ export const BaseInput: React.FC<BaseInputProps> = ({
         <Form.Control
           {...inputProps}
           {...textareaProps}
+          ref={ref as any}
         />
       )}
       {error && (
@@ -95,4 +97,4 @@ export const BaseInput: React.FC<BaseInputProps> = ({
       )}
     </Form.Group>
   );
-}; 
+}); 

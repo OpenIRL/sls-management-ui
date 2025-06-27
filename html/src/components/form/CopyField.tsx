@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { Button } from 'react-bootstrap';
 import { BaseInput, BaseInputProps } from './BaseInput';
 
@@ -10,6 +10,37 @@ export interface CopyFieldProps extends Omit<BaseInputProps, 'rightActions'> {
   additionalActions?: React.ReactNode;
 }
 
+// Fallback copy function using existing input field
+const fallbackCopyToClipboard = (inputRef: React.RefObject<HTMLInputElement | HTMLTextAreaElement>): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    try {
+      const input = inputRef.current;
+      if (!input) {
+        reject(new Error('Input element not found'));
+        return;
+      }
+
+      // Select the text in the existing input
+      input.focus();
+      input.select();
+      
+      // Try to copy using execCommand
+      const successful = document.execCommand('copy');
+        
+      // Deselect the input
+      input.blur();
+
+      if (successful) {
+        resolve();
+      } else {
+        reject(new Error('Fallback copy failed'));
+      }
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
 // Copy field component that extends BaseInput with copy functionality
 export const CopyField: React.FC<CopyFieldProps> = ({
   onCopy,
@@ -20,11 +51,19 @@ export const CopyField: React.FC<CopyFieldProps> = ({
   ...baseInputProps
 }) => {
   const [copied, setCopied] = useState(false);
+  const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement>(null);
 
-  // Handle copy to clipboard
-  const handleCopy = async () => {
+  // Handle copy to clipboard with fallback for HTTP environments
+  const handleCopy = useCallback(async () => {
     try {
-      await navigator.clipboard.writeText(baseInputProps.value);
+      // Try modern clipboard API first
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(baseInputProps.value);
+      } else {
+        // Fallback for HTTP environments
+        await fallbackCopyToClipboard(inputRef);
+      }
+      
       setCopied(true);
       setTimeout(() => setCopied(false), successDuration);
       
@@ -35,12 +74,13 @@ export const CopyField: React.FC<CopyFieldProps> = ({
     } catch (err) {
       console.error('Failed to copy:', err);
     }
-  };
+  }, [baseInputProps.value, onCopy, successDuration, inputRef]);
 
   return (
     <BaseInput
       {...baseInputProps}
       readOnly={readOnly}
+      ref={inputRef}
       rightActions={
         <>
           {additionalActions}
