@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from 'react-bootstrap';
-import { CopyField, CopyFieldProps } from './CopyField';
+import { CopyFieldProps } from './CopyField';
+import {BaseInput} from "./BaseInput";
 
 // Props for CopyFieldWithHide component
 export interface CopyFieldWithHideProps extends Omit<CopyFieldProps, 'additionalActions'> {
@@ -8,7 +9,7 @@ export interface CopyFieldWithHideProps extends Omit<CopyFieldProps, 'additional
 }
 
 // Copy field with hide/show functionality (for sensitive data like API keys)
-export const CopyFieldWithHide: React.FC<CopyFieldWithHideProps> = ({
+export const HideField: React.FC<CopyFieldWithHideProps> = ({
   showToggleText = false,
   readOnly = false,
   ...props
@@ -16,11 +17,11 @@ export const CopyFieldWithHide: React.FC<CopyFieldWithHideProps> = ({
   const [showValue, setShowValue] = useState(false);
 
   return (
-    <CopyField
+    <BaseInput
       {...props}
       readOnly={readOnly}
       type={showValue ? 'text' : 'password'}
-      additionalActions={
+      rightActions={
         <Button
           variant="outline-secondary"
           onClick={() => setShowValue(!showValue)}

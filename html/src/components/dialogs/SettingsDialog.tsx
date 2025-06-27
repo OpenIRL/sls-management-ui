@@ -3,7 +3,7 @@ import { Modal, Form, Button, Alert } from 'react-bootstrap';
 import { useAuth } from '../../contexts/AuthContext';
 import { useSettings } from '../../contexts/SettingsContext';
 import config from '../../config';
-import { AdvancedModeToggle, CopyFieldWithHide } from '../form';
+import { AdvancedModeToggle, HideField } from '../form';
 
 // Props for SettingsDialog component
 interface SettingsDialogProps {
@@ -65,7 +65,7 @@ export const SettingsDialog: React.FC<SettingsDialogProps> = ({
             </Form.Text>
           </Form.Group>
           
-          <CopyFieldWithHide
+          <HideField
             label="API Key"
             value={localApiKey}
             onChange={setLocalApiKey}
