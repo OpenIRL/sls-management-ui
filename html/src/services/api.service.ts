@@ -74,12 +74,6 @@ export class ApiService {
       return null;
     }
   }
-
-  // Get server configuration
-  async getServerConfig(): Promise<ServerConfig> {
-    const response = await this.api.get<ApiResponse<ServerConfig>>('/api/config');
-    return response.data.data!;
-  }
 }
 
 // Create a singleton instance
