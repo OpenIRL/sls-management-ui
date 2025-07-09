@@ -41,7 +41,7 @@ export const generateSrtlaPublisherUrl = (publisherId: string): string => {
 export const generateStatsUrl = (playerId: string): string => {
     const hostname = getServerHostname();
     const port = config.slsStatsPort;
-    return `http://${hostname}:${port}/stats/${playerId}`;
+    return `http://${hostname}:${port}/stats/${playerId}?legacy=1`;
 };
 
 // URL information for display
