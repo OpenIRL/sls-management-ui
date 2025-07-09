@@ -8,14 +8,9 @@ export interface StreamId {
 
 export interface PublisherStats {
   bitrate: number;
-  bytesRcvDrop: number;
-  bytesRcvLoss: number;
+  buffer: number;
+  dropped_pkts: number;
   latency: number;
-  mbpsBandwidth: number;
-  mbpsRecvRate: number;
-  msRcvBuf: number;
-  pktRcvDrop: number;
-  pktRcvLoss: number;
   rtt: number;
   uptime: number;
 }
@@ -41,7 +36,7 @@ export interface ApiResponse<T> {
 
 export interface StatsResponse {
   status: string;
-  publishers: Record<string, PublisherStats>;
+  publisher?: PublisherStats;
 }
 
 export interface ApiError {

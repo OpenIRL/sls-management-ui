@@ -66,9 +66,7 @@ export class ApiService {
       });
       
       // Return the first publisher found (there should only be one per player ID)
-      const publishers = response.data.publishers;
-      const publisherKey = Object.keys(publishers)[0];
-      return publisherKey ? publishers[publisherKey] : null;
+      return response.data.publisher ?? null;
     } catch (error) {
       console.error('Error fetching publisher stats:', error);
       return null;

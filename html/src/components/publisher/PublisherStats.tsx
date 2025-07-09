@@ -61,8 +61,8 @@ export const PublisherStats: React.FC<PublisherStatsProps> = ({
       <StatItem
         icon="bi bi-x-octagon"
         label="Packet Drop"
-        value={stats.pktRcvDrop}
-        isDanger={stats.pktRcvDrop > 0}
+        value={stats.dropped_pkts}
+        isDanger={stats.dropped_pkts > 0}
       />
     </div>
   );
