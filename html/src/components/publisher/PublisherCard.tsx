@@ -26,8 +26,7 @@ export const PublisherCard: React.FC<PublisherCardProps> = ({
   const [urlsDialogOpen, setUrlsDialogOpen] = useState(false);
 
   // Use custom hooks for stats and timer
-  const { stats, isOnline, loading, lastUpdate, currentRefreshInterval } = usePublisherStats(streamIds);
-  const secondsUntilUpdate = useRefreshTimer(lastUpdate, currentRefreshInterval);
+  const { stats, isOnline, loading, secondsUntilUpdate } = usePublisherStats(streamIds);
 
   // Handle showing URLs for a stream
   const handleShowUrls = (streamId: StreamId) => {

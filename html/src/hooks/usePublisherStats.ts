@@ -2,18 +2,18 @@ import { useState, useEffect, useCallback } from 'react';
 import { PublisherStats } from '../types/api.types';
 import { apiService } from '../services/api.service';
 import { StreamId } from '../types/api.types';
+import {useRefreshTimer} from "./useRefreshTimer";
 
 // Constants for refresh intervals
-const ACTIVE_REFRESH_INTERVAL = 5000; // 5 seconds for active publishers
-const INACTIVE_REFRESH_INTERVAL = 10000; // 10 seconds for inactive publishers
+const ACTIVE_REFRESH_INTERVAL = 5; // 5 seconds for active publishers
+const INACTIVE_REFRESH_INTERVAL = 10; // 10 seconds for inactive publishers
 
 // Result type for the hook
 interface UsePublisherStatsResult {
   stats: PublisherStats | null;
   isOnline: boolean;
   loading: boolean;
-  lastUpdate: Date;
-  currentRefreshInterval: number;
+  secondsUntilUpdate: number;
 }
 
 // Custom hook for managing publisher statistics fetching
@@ -21,10 +21,13 @@ export const usePublisherStats = (streamIds: StreamId[]): UsePublisherStatsResul
   const [stats, setStats] = useState<PublisherStats | null>(null);
   const [isOnline, setIsOnline] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
+
+  const [refreshInterval, setRefreshInterval] = useState(INACTIVE_REFRESH_INTERVAL);
 
   // Calculate current refresh interval based on online status
-  const currentRefreshInterval = isOnline ? ACTIVE_REFRESH_INTERVAL : INACTIVE_REFRESH_INTERVAL;
+  useEffect(() => {
+    setRefreshInterval(isOnline ? ACTIVE_REFRESH_INTERVAL : INACTIVE_REFRESH_INTERVAL);
+  }, [isOnline]);
 
   // Fetch publisher statistics using any of the player IDs
   const fetchStats = useCallback(async () => {
@@ -40,35 +43,25 @@ export const usePublisherStats = (streamIds: StreamId[]): UsePublisherStatsResul
       const publisherStats = await apiService.getPublisherStats(streamIds[0].player);
       setStats(publisherStats);
       setIsOnline(!!publisherStats);
-      setLoading(false);
-      setLastUpdate(new Date());
     } catch (error) {
       console.error('Error fetching stats:', error);
       setStats(null);
       setIsOnline(false);
+    } finally {
       setLoading(false);
     }
   }, [streamIds]);
 
-  // Dynamic interval based on online status
   useEffect(() => {
-    // Initial fetch
-    fetchStats();
+    (async () => await fetchStats())();
+  }, [fetchStats]);
 
-    // Set up interval with dynamic refresh rate
-    const intervalId = setInterval(() => {
-      fetchStats();
-    }, currentRefreshInterval);
-
-    // Clean up interval on unmount or when dependencies change
-    return () => clearInterval(intervalId);
-  }, [streamIds, isOnline, currentRefreshInterval, fetchStats]);
+  const secondsUntilUpdate = useRefreshTimer(fetchStats, refreshInterval);
 
   return {
     stats,
     isOnline,
     loading,
-    lastUpdate,
-    currentRefreshInterval
+    secondsUntilUpdate
   };
 }; 

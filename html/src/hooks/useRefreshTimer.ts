@@ -1,20 +1,25 @@
 import { useState, useEffect } from 'react';
 
-// Custom hook for managing refresh timer countdown
-export const useRefreshTimer = (lastUpdate: Date, refreshInterval: number) => {
-  const [secondsUntilUpdate, setSecondsUntilUpdate] = useState(0);
+export const useRefreshTimer = (onExpire = (): void => undefined, refreshInterval: number) => {
+  const [secondsUntilUpdate, setSecondsUntilUpdate] = useState(refreshInterval);
+
+  useEffect(() => {
+    setSecondsUntilUpdate(refreshInterval);
+  }, [refreshInterval]);
 
   useEffect(() => {
     const countdownInterval = setInterval(() => {
-      const now = new Date();
-      const timeSinceLastUpdate = now.getTime() - lastUpdate.getTime();
-      const timeUntilNextUpdate = refreshInterval - timeSinceLastUpdate;
-      const secondsRemaining = Math.max(0, Math.ceil(timeUntilNextUpdate / 1000));
-      setSecondsUntilUpdate(secondsRemaining);
+      if (secondsUntilUpdate === 1) {
+        onExpire();
+        setSecondsUntilUpdate(refreshInterval);
+        return;
+      }
+
+      setSecondsUntilUpdate(secondsUntilUpdate - 1);
     }, 1000);
 
     return () => clearInterval(countdownInterval);
-  }, [lastUpdate, refreshInterval]);
+  }, [secondsUntilUpdate, setSecondsUntilUpdate, refreshInterval, onExpire])
 
   return secondsUntilUpdate;
-}; 
+};
