@@ -15,13 +15,6 @@ export interface PublisherStats {
   uptime: number;
 }
 
-export interface ServerConfig {
-  listen_publisher: number;
-  listen_player: number;
-  http_port: number;
-  latency: number;
-}
-
 export interface HealthStatus {
   status: string;
   service: string;

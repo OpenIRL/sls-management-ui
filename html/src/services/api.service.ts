@@ -2,8 +2,7 @@ import axios, { AxiosInstance } from 'axios';
 import { 
   StreamId, 
   PublisherStats, 
-  ServerConfig, 
-  HealthStatus, 
+  HealthStatus,
   ApiResponse, 
   StatsResponse 
 } from '../types/api.types';

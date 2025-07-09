@@ -4,7 +4,7 @@ import { StreamId } from '../../types/api.types';
 import { StreamUrlsDialog } from '../dialogs/StreamUrlsDialog';
 import { StatusBadge, RefreshTimer, LoadingBar } from '../ui';
 import { PublisherStats, PlayerIdList } from './';
-import { usePublisherStats, useRefreshTimer } from '../../hooks';
+import { usePublisherStats } from '../../hooks';
 
 // Props for PublisherCard component
 interface PublisherCardProps {
